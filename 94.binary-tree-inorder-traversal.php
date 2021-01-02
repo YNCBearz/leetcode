@@ -23,7 +23,12 @@ class Solution
     /**
      * @var Integer[]
      */
-    protected $answers = [];
+    protected $stack;
+
+    /**
+     * @var Integer[]
+     */
+    protected $answer;
 
     /**
      * @param TreeNode $root
@@ -32,27 +37,24 @@ class Solution
     public function inorderTraversal($root)
     {
         $this->findAnswer($root);
-        return $this->answers;
+        return $this->answer;
     }
-
 
     /**
      * @param TreeNode $root
-     * @return Integer[]
      */
     private function findAnswer($root)
     {
-        //先把左子樹找完
+        $this->stack[] = $root->val;
+
         if (!is_null($root->left)) {
-            $left_results = $this->findAnswer($root->left);
+            $this->findAnswer($root->left);
         }
 
-        //沒有左子樹後，填入根（自己）
-        $this->answers[] = $root->val;
+        $this->answer[] = array_pop($this->stack);
 
-        //再找右子樹
         if (!is_null($root->right)) {
-            $right_results = $this->findAnswer($root->right);
+            $this->findAnswer($root->right);
         }
     }
 }
