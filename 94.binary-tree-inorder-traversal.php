@@ -59,15 +59,3 @@ class Solution
     }
 }
 // @lc code=end
-
-//     4
-//    / \
-//   2   6
-//  / \ / \
-// 1  3 5  7
-
-//pre-, in-, post-是指parent node相對於child node的順序
-
-//Preorder （根、左子樹、右子樹）-> 4213657
-//Inorder （左子樹、根、右子樹）-> 1234567
-//Postorder （左子樹、右子樹、根）-> 1325764
