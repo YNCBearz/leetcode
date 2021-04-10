@@ -23,7 +23,12 @@ class Solution
     /**
      * @var Integer[]
      */
-    protected $answer;
+    protected $answer = [];
+
+    /**
+     * @var Integer[]
+     */
+    protected $stack = [];
 
     /**
      * @param TreeNode $root
@@ -40,14 +45,18 @@ class Solution
      */
     private function findAnswer($root)
     {
-        if (!is_null($root->left)) {
-            $this->findAnswer($root->left);
-        }
+        while (count($this->stack) > 0 || !is_null($root)) {
+            if (!is_null($root)) {
+                $this->stack[] = $root;
+                $root = $root->left;
+            } else {
+                $pop = array_pop($this->stack);
+                $this->answer[] = $pop->val;
 
-        $this->answer[] = $root->val;
-
-        if (!is_null($root->right)) {
-            $this->findAnswer($root->right);
+                if (!is_null($pop->right)) {
+                    $root = $pop->right;
+                }
+            }
         }
     }
 }
