@@ -23,11 +23,6 @@ class Solution
     /**
      * @var Integer[]
      */
-    protected $stack;
-
-    /**
-     * @var Integer[]
-     */
     protected $answer;
 
     /**
@@ -45,13 +40,11 @@ class Solution
      */
     private function findAnswer($root)
     {
-        $this->stack[] = $root->val;
-
         if (!is_null($root->left)) {
             $this->findAnswer($root->left);
         }
 
-        $this->answer[] = array_pop($this->stack);
+        $this->answer[] = $root->val;
 
         if (!is_null($root->right)) {
             $this->findAnswer($root->right);
