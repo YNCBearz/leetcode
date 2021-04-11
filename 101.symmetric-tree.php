@@ -25,9 +25,9 @@ namespace LeetCode\SymmetricTree;
 class Solution
 {
     /**
-     * @var bool
+     * @var array
      */
-    protected $answer = true;
+    protected $stack = [];
 
     /**
      * @param TreeNode $root
@@ -39,65 +39,30 @@ class Solution
             return true;
         }
 
-        if (is_null($root->left) && is_null($root->right)) {
-            return true;
+        $this->stack[] = [$root->left, $root->right];
+
+        while (count($this->stack) > 0) {
+            $pop = array_pop($this->stack);
+            $left = $pop[0];
+            $right = $pop[1];
+
+            if (is_null($left) && is_null($right)) {
+                continue;
+            }
+
+            if (is_null($left) || is_null($right)) {
+                return false;
+            }
+
+            if ($left->val == $right->val) {
+                $this->stack[] = [$left->left, $right->right];
+                $this->stack[] = [$left->right, $right->left];
+            } else {
+                return false;
+            }
         }
 
-        $this->checkSysmmetric($root->left, $root->right);
-        return $this->answer;
-    }
-
-    /**
-     * @param TreeNode $leftTree
-     * @param TreeNode $rightTree
-     */
-    private function checkSysmmetric($leftTree, $rightTree)
-    {
-        if ($leftTree->val !== $rightTree->val) {
-            return $this->answer = false;
-        }
-
-        if (
-            $leftTree->left instanceof TreeNode &&
-            $rightTree->right instanceof TreeNode
-        ) {
-            $this->checkSysmmetric($leftTree->left, $rightTree->right);
-        }
-
-        if (
-            $leftTree->right instanceof TreeNode &&
-            $rightTree->left instanceof TreeNode
-        ) {
-            $this->checkSysmmetric($leftTree->right, $rightTree->left);
-        }
-
-        if ($this->isNullAmountOdd($leftTree->left, $rightTree->right)) {
-            return $this->answer = false;
-        }
-
-        if ($this->isNullAmountOdd($leftTree->right, $rightTree->left)) {
-            return $this->answer = false;
-        }
-    }
-
-    /**
-     * @param TreeNode|null $a
-     * @param TreeNode|null $b
-     * @return bool
-     */
-    private function isNullAmountOdd($a, $b)
-    {
-        $nullAmount = 0;
-
-        if (is_null($a)) {
-            $nullAmount++;
-        }
-
-        if (is_null($b)) {
-            $nullAmount++;
-        }
-
-        return ($nullAmount % 2 == 1);
+        return true;
     }
 }
 // @lc code=end
