@@ -71,21 +71,33 @@ class Solution
             $this->checkSysmmetric($leftTree->right, $rightTree->left);
         }
 
-        if (is_null($leftTree->left) && !is_null($rightTree->right)) {
+        if ($this->isNullAmountOdd($leftTree->left, $rightTree->right)) {
             return $this->answer = false;
         }
 
-        if (!is_null($leftTree->left) && is_null($rightTree->right)) {
+        if ($this->isNullAmountOdd($leftTree->right, $rightTree->left)) {
             return $this->answer = false;
+        }
+    }
+
+    /**
+     * @param TreeNode|null $a
+     * @param TreeNode|null $b
+     * @return bool
+     */
+    private function isNullAmountOdd($a, $b)
+    {
+        $nullAmount = 0;
+
+        if (is_null($a)) {
+            $nullAmount++;
         }
 
-        if (is_null($leftTree->right) && !is_null($rightTree->left)) {
-            return $this->answer = false;
+        if (is_null($b)) {
+            $nullAmount++;
         }
 
-        if (!is_null($leftTree->right) && is_null($rightTree->left)) {
-            return $this->answer = false;
-        }
+        return ($nullAmount % 2 == 1);
     }
 }
 // @lc code=end
