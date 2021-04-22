@@ -57,13 +57,8 @@ class Solution
 
         $this->answer[$level] = array_merge($this->answer[$level] ?? [], [$root->val]);
 
-        if (!is_null($root->left)) {
-            $this->findAnswer($root->left, $level + 1);
-        }
-
-        if (!is_null($root->right)) {
-            $this->findAnswer($root->right, $level + 1);
-        }
+        $this->findAnswer($root->left, $level + 1);
+        $this->findAnswer($root->right, $level + 1);
     }
 
     private function reverse()
