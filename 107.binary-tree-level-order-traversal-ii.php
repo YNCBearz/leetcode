@@ -2,7 +2,6 @@
 
 namespace LeetCode\BinaryTreeLevelOrderTraversalII;
 
-
 /*
  * @lc app=leetcode id=107 lang=php
  *
@@ -40,6 +39,7 @@ class Solution
             return [];
         }
 
+        $this->answer[0] = [$root->val];
         $this->findAnswer($root);
         $this->reverse();
         return $this->answer;
@@ -47,15 +47,20 @@ class Solution
 
     /**
      * @param TreeNode $root
-     * @param int $level
      */
-    private function findAnswer($root, $level = 0)
+    private function findAnswer($root, $level = 1)
     {
         if (is_null($root->val)) {
             return;
         }
 
-        $this->answer[$level] = array_merge($this->answer[$level] ?? [], [$root->val]);
+        if (!is_null($root->left)) {
+            $this->answer[$level] = array_merge($this->answer[$level] ?? [], [$root->left->val]);
+        }
+
+        if (!is_null($root->right)) {
+            $this->answer[$level] = array_merge($this->answer[$level] ?? [], [$root->right->val]);
+        }
 
         $this->findAnswer($root->left, $level + 1);
         $this->findAnswer($root->right, $level + 1);
