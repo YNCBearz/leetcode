@@ -1,6 +1,9 @@
 <?php
 
 namespace LeetCode\LongestSubstringWithoutRepeatintCharacters;
+
+require __DIR__ . '/vendor/autoload.php';
+
 /*
  * @lc app=leetcode id=3 lang=php
  *
@@ -12,44 +15,38 @@ class Solution
 {
 
     /**
-     * @param String $s
-     * @return Integer
+     * @param string $string
+     * @return int
      */
     public function lengthOfLongestSubstring($string)
     {
-        $longestNotRepeatingCharactersLength = 0;
-        while (
-            strlen($string) > $longestNotRepeatingCharactersLength &&
-            $longestNotRepeatingCharactersLength <= 128
-        ) {
+        $answer = 0;
 
-            $count = $this->longestNotRepeatingCharactersLength($string);
-            if ($count > $longestNotRepeatingCharactersLength) {
-                $longestNotRepeatingCharactersLength = $count;
-            }
-
-            $string = substr($string, 1);
+        $length = strlen($string);
+        if ($length == 0) {
+            return $answer;
         }
 
-        return $longestNotRepeatingCharactersLength;
-    }
-
-    public function longestNotRepeatingCharactersLength(string $string): int
-    {
-        $stringArray = str_split($string);
-
-        $result = 0;
+        $windowLeft = 0;
+        $windowRight = 0;
         $usedCharacters = [];
-        foreach ($stringArray as $key => $character) {
-            if (isset($usedCharacters[$character])) {
-                return $result;
+        while ($windowRight < $length) {
+            $character = $string[$windowRight];
+
+            while (
+                isset($usedCharacters[$character]) &&
+                $windowLeft <= $usedCharacters[$character]
+            ) {
+                $windowLeft++;
             }
 
-            $usedCharacters[$character] = true;
-            $result++;
+            $usedCharacters[$character] = $windowRight;
+            $windowRight++;
+
+            $answer = max($answer, $windowRight - $windowLeft);
         }
 
-        return $result;
+        return $answer;
     }
 }
 // @lc code=end
