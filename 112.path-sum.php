@@ -27,10 +27,10 @@ class Solution
 
     /**
      * @param TreeNode $root
-     * @param Integer $targetSum
+     * @param int $targetSum
      * @return Boolean
      */
-    function hasPathSum($root, $targetSum)
+    public function hasPathSum($root, $targetSum)
     {
         $total = 0;
         $total = $total + $root->val;
