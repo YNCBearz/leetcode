@@ -15,12 +15,6 @@ class LFUCache
 {
     protected int $capacity = 0;
 
-    protected array $cache = [];
-
-    protected array $cacheUsedCounter = [];
-
-    protected array $recentlyUsedKeys = [];
-
     /**
      * @param int $capacity
      */
@@ -35,18 +29,6 @@ class LFUCache
      */
     public function get($key)
     {
-        if ($this->capacity == 0) {
-            return -1;
-        }
-
-        if (isset($this->cache[$key])) {
-            $this->cacheUsedCounter[$key]++;
-            $this->recentlyUsedKeys[] = $key;
-            return $this->cache[$key];
-        } else {
-            $this->recentlyUsedKeys[] = $key;
-            return -1;
-        }
     }
 
     /**
@@ -56,42 +38,6 @@ class LFUCache
      */
     public function put($key, $value)
     {
-        if ($this->capacity == 0) {
-            return;
-        }
-
-        if (isset($this->cache[$key])) {
-            $this->cacheUsedCounter[$key]++;
-            $this->cache[$key] = $value;
-            $this->recentlyUsedKeys[] = $key;
-        } else {
-            if (count($this->cache) == $this->capacity) {
-                $minUsedCounterKeys = array_keys($this->cacheUsedCounter, min($this->cacheUsedCounter));
-                if (count($minUsedCounterKeys) == 1) {
-                    $minUsedCounterKey = $minUsedCounterKeys[0];
-                    unset($this->cacheUsedCounter[$minUsedCounterKey]);
-                    unset($this->cache[$minUsedCounterKey]);
-                } else {
-                    $usedKeys = [];
-                    while (count($this->recentlyUsedKeys) > 0) {
-                        $usedKey = array_pop($this->recentlyUsedKeys);
-                        if (in_array($usedKey, $minUsedCounterKeys)) {
-                            $usedKeys[$usedKey] = true;
-                        }
-
-                        if (count($usedKeys) == count($minUsedCounterKeys)) {
-                            unset($this->cacheUsedCounter[$usedKey]);
-                            unset($this->cache[$usedKey]);
-                            break;
-                        }
-                    }
-                }
-            }
-
-            $this->cacheUsedCounter[$key] = 1;
-            $this->cache[$key] = $value;
-            $this->recentlyUsedKeys[] = $key;
-        }
     }
 }
 
