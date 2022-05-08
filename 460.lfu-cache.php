@@ -19,7 +19,7 @@ class LFUCache
 
     protected array $cacheUsedCounter = [];
 
-    protected ?int $leastRecentlyUsedKey = null;
+    protected array $recentlyUsedKeys = [];
 
     /**
      * @param int $capacity
@@ -35,6 +35,18 @@ class LFUCache
      */
     public function get($key)
     {
+        if ($this->capacity == 0) {
+            return -1;
+        }
+
+        if (isset($this->cache[$key])) {
+            $this->cacheUsedCounter[$key]++;
+            $this->recentlyUsedKeys[] = $key;
+            return $this->cache[$key];
+        } else {
+            $this->recentlyUsedKeys[] = $key;
+            return -1;
+        }
     }
 
     /**
@@ -44,6 +56,42 @@ class LFUCache
      */
     public function put($key, $value)
     {
+        if ($this->capacity == 0) {
+            return;
+        }
+
+        if (isset($this->cache[$key])) {
+            $this->cacheUsedCounter[$key]++;
+            $this->cache[$key] = $value;
+            $this->recentlyUsedKeys[] = $key;
+        } else {
+            if (count($this->cache) == $this->capacity) {
+                $minUsedCounterKeys = array_keys($this->cacheUsedCounter, min($this->cacheUsedCounter));
+                if (count($minUsedCounterKeys) == 1) {
+                    $minUsedCounterKey = $minUsedCounterKeys[0];
+                    unset($this->cacheUsedCounter[$minUsedCounterKey]);
+                    unset($this->cache[$minUsedCounterKey]);
+                } else {
+                    $usedKeys = [];
+                    while (count($this->recentlyUsedKeys) > 0) {
+                        $usedKey = array_pop($this->recentlyUsedKeys);
+                        if (in_array($usedKey, $minUsedCounterKeys)) {
+                            $usedKeys[$usedKey] = true;
+                        }
+
+                        if (count($usedKeys) == count($minUsedCounterKeys)) {
+                            unset($this->cacheUsedCounter[$usedKey]);
+                            unset($this->cache[$usedKey]);
+                            break;
+                        }
+                    }
+                }
+            }
+
+            $this->cacheUsedCounter[$key] = 1;
+            $this->cache[$key] = $value;
+            $this->recentlyUsedKeys[] = $key;
+        }
     }
 }
 
@@ -55,14 +103,18 @@ class LFUCache
  */
 // @lc code=end
 
-$lfu = new LFUCache(2);
+$lfu = new LFUCache(3);
 $lfu->put(1, 1);
 $lfu->put(2, 2);
-($lfu->get(1));
 $lfu->put(3, 3);
-($lfu->get(2));
-($lfu->get(3));
 $lfu->put(4, 4);
-($lfu->get(1));
-($lfu->get(3));
-($lfu->get(4));
+dump($lfu->get(4)); //4
+dump($lfu->get(3)); //3
+dump($lfu->get(2)); //2
+dump($lfu->get(1)); //-1
+$lfu->put(5, 5);
+dump($lfu->get(1)); //-1
+dump($lfu->get(2)); //2
+dump($lfu->get(3)); //3
+dump($lfu->get(4)); //-1
+dump($lfu->get(5)); //5
