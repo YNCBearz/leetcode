@@ -5,10 +5,11 @@ namespace LeetCode\LFUCache;
 require __DIR__ . '/vendor/autoload.php';
 
 /*
- * @lc app=leetcode id=460 lang=php
- *
- * [460] LFU Cache
- */
+* @lc app=leetcode id=460 lang=php
+*
+* [460] LFU Cache
+*/
+// @lc code=start
 class Node
 {
     public ?int $key;
@@ -75,7 +76,6 @@ class DoubleLinkedList
     }
 }
 
-// @lc code=start
 class LFUCache
 {
     protected int $capacity;
