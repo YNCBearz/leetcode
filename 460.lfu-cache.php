@@ -61,7 +61,7 @@ class DoubleLinkedList
             return null;
         }
 
-        //nice
+        //good thinking
         if (is_null($node)) {
             $node = $this->sentinel->prev;
         }
@@ -111,10 +111,6 @@ class LFUCache
         $node = $this->nodeDictionary[$key];
         $frequence = $node->frequence;
 
-        if (!isset($this->doubleListCollection[$frequence])) {
-            $this->doubleListCollection[$frequence] = new DoubleLinkedList();
-        }
-
         $doubleLinkedList = $this->doubleListCollection[$frequence];
         $doubleLinkedList->pop($node);
 
@@ -138,9 +134,9 @@ class LFUCache
     /**
      * @param int $key
      * @param int $value
-     * @return null
+     * @return void
      */
-    public function put($key, $value)
+    public function put($key, $value): void
     {
         if ($this->capacity == 0) {
             return;
@@ -149,8 +145,6 @@ class LFUCache
         if (isset($this->nodeDictionary[$key])) {
             $node = $this->nodeDictionary[$key];
             $node->value = $value;
-
-            $node = $this->nodeDictionary[$key];
             $frequence = $node->frequence;
 
             $doubleLinkedList = $this->doubleListCollection[$frequence];
@@ -162,6 +156,11 @@ class LFUCache
 
             $node->frequence++;
             $frequence = $node->frequence;
+
+            if (!isset($this->doubleListCollection[$frequence])) {
+                $this->doubleListCollection[$frequence] = new DoubleLinkedList();
+            }
+
             $doubleLinkedList = $this->doubleListCollection[$frequence];
             $doubleLinkedList->append($node);
 
@@ -170,10 +169,10 @@ class LFUCache
 
         if ($this->size == $this->capacity) {
             $doubleLinkedList = $this->doubleListCollection[$this->minFrequence];
-            $node = $doubleLinkedList->pop();
+            $unsetNode = $doubleLinkedList->pop();
 
-            $key = $node->key;
-            unset($this->nodeDictionary[$key]);
+            $unsetNodeKey = $unsetNode->key;
+            unset($this->nodeDictionary[$unsetNodeKey]);
 
             $this->size--;
 
