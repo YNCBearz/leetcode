@@ -81,7 +81,7 @@ class LFUCache
     public int $capacity;
     public int $size;
     public array $nodeDictionary;
-    public array $doubleListCollection;
+    public array $doubleLinkedListCollection;
     public int $minFrequence;
 
     const NODE_NOT_EXISTS = -1;
@@ -94,7 +94,7 @@ class LFUCache
         $this->capacity = $capacity;
         $this->size = 0;
         $this->nodeDictionary = [];
-        $this->doubleListCollection = [];
+        $this->doubleLinkedListCollection = [];
         $this->minFrequence = 0;
     }
 
@@ -111,7 +111,7 @@ class LFUCache
         $node = $this->nodeDictionary[$key];
         $frequence = $node->frequence;
 
-        $doubleLinkedList = $this->doubleListCollection[$frequence];
+        $doubleLinkedList = $this->doubleLinkedListCollection[$frequence];
         $doubleLinkedList->pop($node);
 
         if ($doubleLinkedList->size == 0 && $frequence == $this->minFrequence) {
@@ -121,11 +121,11 @@ class LFUCache
         $node->frequence++;
         $frequence = $node->frequence;
 
-        if (!isset($this->doubleListCollection[$frequence])) {
-            $this->doubleListCollection[$frequence] = new DoubleLinkedList();
+        if (!isset($this->doubleLinkedListCollection[$frequence])) {
+            $this->doubleLinkedListCollection[$frequence] = new DoubleLinkedList();
         }
 
-        $doubleLinkedList = $this->doubleListCollection[$frequence];
+        $doubleLinkedList = $this->doubleLinkedListCollection[$frequence];
         $doubleLinkedList->append($node);
 
         return $node->value;
@@ -147,7 +147,7 @@ class LFUCache
             $node->value = $value;
             $frequence = $node->frequence;
 
-            $doubleLinkedList = $this->doubleListCollection[$frequence];
+            $doubleLinkedList = $this->doubleLinkedListCollection[$frequence];
             $doubleLinkedList->pop($node);
 
             if ($doubleLinkedList->size == 0 && $frequence == $this->minFrequence) {
@@ -157,18 +157,18 @@ class LFUCache
             $node->frequence++;
             $frequence = $node->frequence;
 
-            if (!isset($this->doubleListCollection[$frequence])) {
-                $this->doubleListCollection[$frequence] = new DoubleLinkedList();
+            if (!isset($this->doubleLinkedListCollection[$frequence])) {
+                $this->doubleLinkedListCollection[$frequence] = new DoubleLinkedList();
             }
 
-            $doubleLinkedList = $this->doubleListCollection[$frequence];
+            $doubleLinkedList = $this->doubleLinkedListCollection[$frequence];
             $doubleLinkedList->append($node);
 
             return;
         }
 
         if ($this->size == $this->capacity) {
-            $doubleLinkedList = $this->doubleListCollection[$this->minFrequence];
+            $doubleLinkedList = $this->doubleLinkedListCollection[$this->minFrequence];
             $unsetNode = $doubleLinkedList->pop();
 
             $unsetNodeKey = $unsetNode->key;
@@ -184,11 +184,11 @@ class LFUCache
         $node = new Node($key, $value);
         $this->nodeDictionary[$key] = $node;
 
-        if (!isset($this->doubleListCollection[1])) {
-            $this->doubleListCollection[1] = new DoubleLinkedList();
+        if (!isset($this->doubleLinkedListCollection[1])) {
+            $this->doubleLinkedListCollection[1] = new DoubleLinkedList();
         }
 
-        $doubleLinkedList = $this->doubleListCollection[1];
+        $doubleLinkedList = $this->doubleLinkedListCollection[1];
         $doubleLinkedList->append($node);
 
         $this->minFrequence = 1;
