@@ -68,11 +68,7 @@ class DoubleLinkedList
         }
 
         $node->prev->next = $node->next;
-        // $node->prev->next = $this->sentinel;
-
         $node->next->prev = $node->prev;
-        // $this->sentinel->prev = $node->prev;
-
 
         $this->size--;
 
