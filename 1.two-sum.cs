@@ -8,6 +8,8 @@
 using System.Collections.Generic;
 using System.Linq;
 
+namespace LeetCode.TwoSum;
+
 public class Solution {
 
     private Dictionary<int, List<int>> existNumbers = new Dictionary<int, List<int>>();
