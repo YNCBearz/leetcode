@@ -8,8 +8,6 @@
 using System;
 using System.Runtime.Intrinsics.X86;
 
-// namespace LeetCode.IsPalindrome;
-
 public class Solution {
     public bool IsPalindrome(int i) {
         if (i == 0)
